@@ -1,0 +1,87 @@
+﻿@page "/"
+
+<PageTitle>Home</PageTitle>
+<section class="hero is-success is-fullheight">
+    <!-- Hero head: will stick at the top -->
+    <div class="hero-head">
+        <header class="navbar">
+            <div class="container">
+                <div class="navbar-brand">
+                    <a class="navbar-item">
+                        <img src="https://bulma.io/images/bulma-type-white.png" alt="Logo">
+                    </a>
+                    <span class="navbar-burger" data-target="navbarMenuHeroC">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </span>
+                </div>
+                <div id="navbarMenuHeroC" class="navbar-menu">
+                    <div class="navbar-end">
+                        <a class="navbar-item is-active">
+                            Przychód
+                        </a>
+                        <a class="navbar-item">
+                            Wydatki
+                        </a>
+                        <a class="navbar-item">
+                            Przepływ pieniędzy
+                        </a>
+                        <span class="navbar-item">
+                            <button class="button is-success is-inverted" @onclick="(()=> {Purchase.show();})">
+                                <span class="icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path fill="#24d160" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM232 344V280H168c-13.3 0-24-10.7-24-24s10.7-24 24-24h64V168c0-13.3 10.7-24 24-24s24 10.7 24 24v64h64c13.3 0 24 10.7 24 24s-10.7 24-24 24H280v64c0 13.3-10.7 24-24 24s-24-10.7-24-24z" /></svg>
+                                </span>
+                                <span>Dodaj wpis</span>
+                            </button>
+                            <AddPurchase @ref="Purchase"></AddPurchase>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </header>
+    </div>
+
+    <!-- Hero content: will be in the middle -->
+    <div class="hero-body tile is-ancestor">
+        <div class="tile is-3 is-vertical is-parent">
+            <button class="button is-primary is-inverted"> KONTO   $$</button>
+            <button class="button is-primary is-inverted"> KONTO   $$</button>
+            <button class="button is-primary is-inverted"> KONTO   $$</button>
+            <button class="button is-primary is-inverted"> KONTO   $$</button>
+        </div>
+
+        <div class="tile is-4 is-vertical is-parent">
+            <div class="tile is-child box">
+                <h1 class="title">Przepływ pieniędzy $$$,$$</h1>
+                <!-- Tu będzie wykres -->
+            </div>
+            <div class="tile is-child box">
+                <h1 class="title">Przychód $$$,$$</h1>
+                <progress class="progress is-primary" value="100" max="100">15%</progress>
+                <h1 class="title">Wydatki $$$,$$</h1>
+                <progress class="progress is-danger" value="20" max="100">15%</progress>
+            </div>
+        </div>
+
+        <div class="tile is-parent">
+            <div class="tile is-child box">
+                <h1 class="title is-info">Wpisy</h1>
+                <table class="table">
+                    <tbody class="is-primary">
+                        <tr>
+                            <th><i class="fa-solid fa-user"></i></th>
+                            <td>Nazwa Konta</td>
+                            <td>Kwota</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+@code {
+    private AddPurchase Purchase;
+
+}
