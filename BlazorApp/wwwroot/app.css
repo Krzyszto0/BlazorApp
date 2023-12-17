@@ -27,3 +27,15 @@ h1:focus {
 .darker-border-checkbox.form-check-input {
     border-color: #929292;
 }
+
+.Title {
+    color: #808080;
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.125;
+}
+
+.button {
+    margin-bottom: 15px;
+}

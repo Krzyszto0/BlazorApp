@@ -1,6 +1,4 @@
-﻿<LogIn Login="false"></LogIn>
-
-@if (display && Login)
+﻿@if (display)
 {
     <div class="modal is-active">
         <div class="modal-background"></div>
@@ -25,15 +23,10 @@
         </div>
     </div>
 }
-else
-{
-    <LogIn></LogIn>    
-}
 
 
 @code {
     private bool display;
-    private bool Login;
 
     public void show()
     {
