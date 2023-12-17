@@ -54,4 +54,4 @@ jobs:
           app-name: 'WebWallet'
           slot-name: 'Production'
           package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_1A771AFE6AC74A04AA377B38BF0C5998 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_CCA11C642BFE4FD390A462EED90BFBAF }}
