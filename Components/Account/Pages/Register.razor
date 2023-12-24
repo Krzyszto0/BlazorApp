@@ -17,10 +17,36 @@
 
 <PageTitle>Register</PageTitle>
 
-<h1>Register</h1>
+<section class="hero is-success is-fullheight">
+    <div class="hero-head">
+        <header class="navbar">
+            <div class="container">
+                <div class="navbar-brand">
+                    <a class="navbar-item" href="">
+                        <span class="title">WebWallet</span>
+                    </a>
+                </div>
+                <div id="navbarMenuHeroC" class="navbar-menu">
+                    <div class="navbar-end">
+                        <a class="navbar-item" href="CashFlow">
+                            Przepływ pieniędzy
+                        </a>
+                        <span class="navbar-item">
+                            <a class="button is-success is-inverted" href="Account/Login">
+                                <span>Zarejestrój się </span>
+                            </a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </header>
+    </div>
 
-<div class="row">
-    <div class="col-md-4">
+<section class="hero-body">
+  <div class="container has-text-centered">
+    <section class="box radius-medium">
+<h1>Register</h1>
+    <section>
         <StatusMessage Message="@Message" />
         <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register">
             <DataAnnotationsValidator />
@@ -44,15 +70,11 @@
             </div>
             <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
         </EditForm>
+    </section>
+    </section>
     </div>
-    <div class="col-md-6 col-md-offset-2">
-        <section>
-            <h3>Use another service to register.</h3>
-            <hr />
-            <ExternalLoginPicker />
-        </section>
-    </div>
-</div>
+</section>
+</section>
 
 @code {
     private IEnumerable<IdentityError>? identityErrors;

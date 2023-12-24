@@ -1,0 +1,73 @@
+﻿@using BlazorApp2.Components.Account.Pages
+
+<AuthorizeView>
+    <Authorized>
+        @if (display)
+        {
+            <div class="modal is-active">
+                <div class="modal-background"></div>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Dodaj Wpis</p>
+                    <button class="delete" aria-label="close" @onclick="close"></button>
+                </header>
+                <section class="modal-card-body">
+                    <div class="box">
+                        <p class="is-info">Konto</p>
+                        <input class="input is-medium is-primary" type="text" placeholder="Wprowadź Konto">
+                        <p class="is-info">Wartość</p>
+                        <input class="input is-medium is-primary" type="text" placeholder="Wprowadź Wartość">
+                    </div>
+                </section>
+                <footer class="modal-card-foot">
+                    <button class="button is-success">Przychód</button>
+                    <button class="button is-success">Wydatek</button>
+                    <button class="button">Cancel</button>
+                </footer>
+            </div>
+        </div>
+        }
+    </Authorized>
+    <NotAuthorized>
+        @if (display)
+        {
+            <div class="modal is-active">
+                <div class="modal-background"></div>
+                <div class="modal-card">
+                    <header class="modal-card-head">
+                        <p class="modal-card-title">Dodaj Wpis</p>
+                        <button class="delete" aria-label="close" @onclick="close"></button>
+                    </header>
+                    <section class="modal-card-body">
+                        <div class="box">
+                            <NavLink href="Account/Login">
+                            <h1 class="button is-success">Zaloguj się</h1>
+                            </NavLink>
+                            <NavLink href="Account/Register">
+                            <h1 class="button is-success">Zarejestruj się</h1>
+                            </NavLink>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        }
+    </NotAuthorized>
+</AuthorizeView>
+
+
+
+@code {
+    private bool display;
+
+    public void show()
+    {
+        this.display = true;
+        StateHasChanged();
+    }
+
+    public void close()
+    {
+        this.display = false;
+        StateHasChanged();
+    }
+}
