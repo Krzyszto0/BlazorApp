@@ -1,4 +1,8 @@
 ﻿@using BlazorApp2.Components.Account.Pages
+@using BlazorApp2.Data.Incomes
+@using BlazorApp2.Data
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inherits OwningComponentBase<IncomeService>
 
 <AuthorizeView>
     <Authorized>
@@ -14,13 +18,13 @@
                 <section class="modal-card-body">
                     <div class="box">
                         <p class="is-info">Konto</p>
-                        <input class="input is-medium is-primary" type="text" placeholder="Wprowadź Konto">
+                        <input class="input is-medium is-primary" type="text" placeholder="Wprowadź Konto" @bind="objincome.Account">
                         <p class="is-info">Wartość</p>
-                        <input class="input is-medium is-primary" type="text" placeholder="Wprowadź Wartość">
+                        <input class="input is-medium is-primary" type="number" placeholder="Wprowadź Wartość" @bind="objincome.Amount">
                     </div>
                 </section>
                 <footer class="modal-card-foot">
-                    <button class="button is-success">Przychód</button>
+                    <button class="button is-success" @onclick="SaveIncome">Przychód</button>
                     <button class="button is-success">Wydatek</button>
                     <button class="button">Cancel</button>
                 </footer>
@@ -40,12 +44,18 @@
                     </header>
                     <section class="modal-card-body">
                         <div class="box">
+                            <div class="columns">
+                                <div class="column">
                             <NavLink href="Account/Login">
                             <h1 class="button is-success">Zaloguj się</h1>
                             </NavLink>
+                                </div>
+                                <div class="column">
                             <NavLink href="Account/Register">
                             <h1 class="button is-success">Zarejestruj się</h1>
                             </NavLink>
+                                </div>
+                            </div>
                         </div>
                     </section>
                 </div>
@@ -59,8 +69,22 @@
 @code {
     private bool display;
 
+    Income objincome = new Income();
+
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+    public List<Income> Incomes;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = (await authenticationStateTask).User;
+        Incomes = await Service.GetIncomesAsync(user.Identity.Name);
+    }
+
     public void show()
     {
+        objincome = new Income();
+        objincome.Id = 0;
         this.display = true;
         StateHasChanged();
     }
@@ -69,5 +93,21 @@
     {
         this.display = false;
         StateHasChanged();
+    }
+
+    async Task SaveIncome()
+    {
+        this.display = false;
+        var user = (await authenticationStateTask).User;
+        if(objincome.Id == 0)
+        {
+            Income objNewincome = new Income();
+            objNewincome.Data = System.DateTime.Now;
+            objNewincome.Account = objincome.Account;
+            objNewincome.Amount = objincome.Amount;
+            objNewincome.UserName = user.Identity.Name;
+            var result = Service.CreateIncomeAsync(objNewincome);
+        }
+        Incomes = await Service.GetIncomesAsync(user.Identity.Name);
     }
 }

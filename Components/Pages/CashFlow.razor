@@ -1,4 +1,10 @@
 ﻿@page "/CashFlow"
+
+@using BlazorApp2.Data.Incomes
+@using BlazorApp2.Data
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inherits OwningComponentBase<IncomeService>
+
 <PageTitle> CashFlow</PageTitle>
 <section class="hero is-success is-fullheight">
     <!-- Hero head: will stick at the top -->
@@ -34,19 +40,51 @@
     <div class="hero-body">
         <div class="container box is-fullwidth">
             <h1 class="Title has-text-centered">Wpisy</h1>
-            <table class="table is-fullwidth">
-                <tbody class="is-primary">
-                    <tr>
-                        <th><i class="fas fa-user"></i></th>
-                        <td>Nazwa Konta</td>
-                        <td>Kwota</td>
-                    </tr>
-                </tbody>
-            </table>
+            @if(Incomes == null)
+            {
+                <p class="title">Nothings here</p>
+            }
+            else
+            {
+                <table class="table is-fullwidth">
+                    <thead class="is-primary">
+                        <tr>
+                            <th><i class="fas fa-user"></i></th>
+                            <td>Nazwa Konta</td>
+                            <td>Kwota</td>
+                            <td>Data</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach(var Income in Incomes)
+                        {
+                            <tr>
+                                <td>@Income.Id</td>
+                                <td>@Income.Account</td>
+                                <td>@Income.Amount</td>
+                                <td>@Income.Data</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <p>
+                    <button class="button is-success" @onclick="(() => {Purchase.show();})">Add</button>
+                </p>
+            }
         </div>
     </div>
 </section>
 
 @code {
     private AddPurchase Purchase;
+
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+    List<Income> Incomes;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = (await authenticationStateTask).User;
+        Incomes = await Service.GetIncomesAsync(user.Identity.Name);
+    }
 }
