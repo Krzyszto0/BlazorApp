@@ -1,5 +1,6 @@
 ﻿@using BlazorApp2.Components.Account.Pages
 @using BlazorApp2.Data.Incomes
+@using BlazorApp2.Data.Outcomes
 @using BlazorApp2.Data
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inherits OwningComponentBase<IncomeService>
@@ -27,6 +28,10 @@
                     <button class="button is-success" @onclick="SaveIncome">Przychód</button>
                     <button class="button is-success">Wydatek</button>
                     <button class="button">Cancel</button>
+                        @if (objincome.Id > 0)
+                        {
+                            <button class="button is-danger" @onclick="Delete">Delete</button>
+                        }
                 </footer>
             </div>
         </div>
@@ -70,10 +75,12 @@
     private bool display;
 
     Income objincome = new Income();
+    Outcome objoutcome = new Outcome();
 
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
     public List<Income> Incomes;
+    public List<Outcome> Outcomes;
 
     protected override async Task OnInitializedAsync()
     {
@@ -85,6 +92,10 @@
     {
         objincome = new Income();
         objincome.Id = 0;
+
+        objoutcome = new Outcome();
+        objoutcome.Id = 0;
+
         this.display = true;
         StateHasChanged();
     }
@@ -107,7 +118,30 @@
             objNewincome.Amount = objincome.Amount;
             objNewincome.UserName = user.Identity.Name;
             var result = Service.CreateIncomeAsync(objNewincome);
+            StateHasChanged();
+        }
+        else
+        {
+            var result = Service.UpdateIncomeAsync(objincome);
         }
         Incomes = await Service.GetIncomesAsync(user.Identity.Name);
     }
+
+    public void Edit(Income income)
+    {
+        objincome = income;
+        this.display = true;
+        StateHasChanged();
+    }
+
+    public async Task Delete()
+    {
+        this.display = false;
+        var user = (await authenticationStateTask).User;
+        var result = Service.DeleteIncomeAsync(objincome);
+        Incomes = await Service.GetIncomesAsync(user.Identity.Name);
+        StateHasChanged();
+    }
+
+
 }

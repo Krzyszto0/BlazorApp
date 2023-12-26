@@ -63,13 +63,16 @@
                                 <td>@Income.Account</td>
                                 <td>@Income.Amount</td>
                                 <td>@Income.Data</td>
+                                <td>
+                                    <button class="button is-success" @onclick="(() => {Purchase.Edit(Income);})">Edit</button>
+                                </td>
                             </tr>
                         }
                     </tbody>
                 </table>
-                <p>
+                <span>
                     <button class="button is-success" @onclick="(() => {Purchase.show();})">Add</button>
-                </p>
+                </span>
             }
         </div>
     </div>
