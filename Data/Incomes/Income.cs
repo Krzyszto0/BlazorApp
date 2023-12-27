@@ -14,7 +14,7 @@ namespace BlazorApp2.Data.Incomes
         public int Id { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? Data { get; set; }
-        public int? Amount { get; set; }
+        public double? Amount { get; set; }
         [StringLength(100)]
         public string Account { get; set; }
         [StringLength(100)]

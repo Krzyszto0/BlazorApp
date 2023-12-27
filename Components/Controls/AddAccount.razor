@@ -1,0 +1,109 @@
+﻿@using BlazorApp2.Components.Account.Pages
+@using BlazorApp2.Data.Accounts
+@using BlazorApp2.Data
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inherits OwningComponentBase<AccountService>
+
+<AuthorizeView>
+    <Authorized>
+        @if (display)
+        {
+            <div class="modal is-active">
+                <div class="modal-background"></div>
+                <div class="modal-card">
+                    <header class="modal-card-head">
+                        <p class="modal-card-title">Dodaj Konto</p>
+                        <button class="delete" aria-label="close" @onclick="close"></button>
+                    </header>
+                    <section class="modal-card-body">
+                        <div class="box">
+                            <p class="is-info">Konto</p>
+                            <input class="input is-medium is-primary" type="text" placeholder="Wprowadź nazwę konta" @bind="objAccount.AccountName">
+                        </div>
+                    </section>
+                    <footer class="modal-card-foot">
+                        <button class="button is-success" @onclick="addAccount">Dodaj Konto</button>
+                        <button class="button" @onclick="close">Cancel</button>
+                    </footer>
+                </div>
+            </div>
+        }
+    </Authorized>
+    <NotAuthorized>
+        @if (display)
+        {
+            <div class="modal is-active">
+                <div class="modal-background"></div>
+                <div class="modal-card">
+                    <header class="modal-card-head">
+                        <p class="modal-card-title">Dodaj Wpis</p>
+                        <button class="delete" aria-label="close" @onclick="close"></button>
+                    </header>
+                    <section class="modal-card-body">
+                        <div class="box">
+                            <div class="columns">
+                                <div class="column">
+                                    <NavLink href="Account/Login">
+                                        <h1 class="button is-success">Zaloguj się</h1>
+                                    </NavLink>
+                                </div>
+                                <div class="column">
+                                    <NavLink href="Account/Register">
+                                        <h1 class="button is-success">Zarejestruj się</h1>
+                                    </NavLink>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        }
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    private bool display;
+    Account objAccount = new Account();
+
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+    public List<Account> Accounts;
+
+    public void show()
+    {
+        objAccount = new Account();
+        objAccount.Id = 0;
+
+        this.display = true;
+        StateHasChanged();
+    }
+
+    public void close()
+    {
+        this.display = false;
+        StateHasChanged();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = (await authenticationStateTask).User;
+        Accounts = await Service.GetAccountsAsync(user.Identity.Name);
+    }
+
+    async Task addAccount()
+    {
+        this.display = false;
+        var user = (await authenticationStateTask).User;
+        if(objAccount.Id == 0)
+        {
+            Account objNewAccount = new Account();
+            objNewAccount.AccountName = objAccount.AccountName;
+            objNewAccount.UserName = user.Identity.Name;
+            var result = Service.CreateAccountAsync(objNewAccount);
+        }
+        else{
+            var result = Service.UpdateAccountAsync(objAccount);
+        }
+        Accounts = await Service.GetAccountsAsync(user.Identity.Name);
+    }
+}

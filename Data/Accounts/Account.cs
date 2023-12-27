@@ -1,22 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-#nullable disable
 
-namespace BlazorApp2.Data.Outcomes
+namespace BlazorApp2.Data.Accounts
 {
-    public partial class Outcome
+    public class Account
     {
         [Key]
         public int Id { get; set; }
-        [Column(TypeName = "datetime")]
-        public DateTime? Data { get; set; }
-        public int? Amount { get; set; }
+        [Required]
         [StringLength(100)]
-        public string Account { get; set; }
+        public string AccountName { get; set; }
         [StringLength(100)]
         public string UserName { get; set; }
     }

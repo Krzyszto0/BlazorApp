@@ -1,23 +1,20 @@
-﻿
-using System;
+﻿using System;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-#nullable disable
-
-namespace BlazorApp2.Data.Outcomes
+namespace BlazorApp2.Data.Accounts
 {
-    public partial class OutcomeDbContext : DbContext
+    public partial class AccountDbContext : DbContext
     {
-        public OutcomeDbContext()
+        public AccountDbContext()
         {
         }
 
-        public OutcomeDbContext(DbContextOptions<OutcomeDbContext> options) : base(options)
-        {
+        public AccountDbContext(DbContextOptions<AccountDbContext> options): base(options) { 
         }
 
-        public virtual DbSet<Outcome> Outcome { get; set; }
+        public virtual DbSet<Account> Account { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

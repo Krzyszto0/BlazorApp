@@ -20,6 +20,7 @@ namespace BlazorApp2.Data
         {
             return await _context.Income
                 .Where(Half => Half.UserName == strCurrentUser)
+                .OrderByDescending(Half => Half.Data)
                 .AsNoTracking().ToListAsync();
         }
 

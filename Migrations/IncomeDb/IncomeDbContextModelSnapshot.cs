@@ -32,18 +32,16 @@ namespace BlazorApp2.Migrations.IncomeDb
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Account")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int?>("Amount")
-                        .HasColumnType("int");
+                    b.Property<double?>("Amount")
+                        .HasColumnType("float");
 
                     b.Property<DateTime?>("Data")
                         .HasColumnType("datetime");
 
                     b.Property<string>("UserName")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
