@@ -20,6 +20,7 @@ namespace BlazorApp2.Data
         {
             return await _context.Income
                 .Where(Half => Half.UserName == strCurrentUser)
+                .Include(h => h.AccountName)
                 .OrderByDescending(Half => Half.Data)
                 .AsNoTracking().ToListAsync();
         }
@@ -37,7 +38,7 @@ namespace BlazorApp2.Data
                 .FirstOrDefault();
             if (ExistingIncome != null) { 
                 ExistingIncome.Data = objincome.Data;
-                ExistingIncome.Account = objincome.Account;
+                ExistingIncome.AccountName = objincome.AccountName;
                 ExistingIncome.Amount = objincome.Amount;
                 ExistingIncome.UserName = objincome.UserName;
                 _context.SaveChanges();

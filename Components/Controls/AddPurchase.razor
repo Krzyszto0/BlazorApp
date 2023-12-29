@@ -18,7 +18,27 @@
                 <section class="modal-card-body">
                     <div class="box">
                         <p class="is-info">Konto</p>
-                        <input class="input is-medium is-primary" type="text" placeholder="Wprowadź Konto" @bind="objincome.Account">
+
+                            <div class="dropdown is-active">
+                                <div class="dropdown-trigger">
+                                    <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+                                        <span>Konto</span>
+                                        <span class="icon is-small">
+                                            <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                        </span>
+                                    </button>
+                                </div>
+                                <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                                    <div class="dropdown-content">
+                                        @foreach(var Income in Incomes){
+                                        <button class="dropdown-item">
+                                            @Income.AccountName  
+                                        </button>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+
                         <p class="is-info">Wartość</p>
                         <input class="input is-medium is-primary" type="number" placeholder="Wprowadź Wartość" @bind="objincome.Amount">
                     </div>
@@ -107,7 +127,7 @@
         {
             Income objNewincome = new Income();
             objNewincome.Data = System.DateTime.Now;
-            objNewincome.Account = objincome.Account;
+            objNewincome.AccountName = objincome.AccountName;
             objNewincome.Amount = objincome.Amount;
             objNewincome.UserName = user.Identity.Name;
             var result = Service.CreateIncomeAsync(objNewincome);

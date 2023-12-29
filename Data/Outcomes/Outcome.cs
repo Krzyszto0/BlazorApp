@@ -7,9 +7,9 @@ using BlazorApp2.Data.Accounts;
 
 #nullable disable
 
-namespace BlazorApp2.Data.Incomes
+namespace BlazorApp2.Data.Outcomes
 {
-    public partial class Income
+    public partial class Outcome
     {
         [Key]
         public int Id { get; set; }

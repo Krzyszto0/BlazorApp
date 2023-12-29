@@ -1,4 +1,5 @@
 ﻿using BlazorApp2.Data.Accounts;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BlazorApp2.Data
 {
-    public class AccountService
+    public class AccountService : IAccountService
     {
         private readonly AccountDbContext _context;
 

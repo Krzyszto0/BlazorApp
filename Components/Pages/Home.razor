@@ -1,9 +1,11 @@
 ﻿@page "/"
 @using BlazorApp2.Data
 @using BlazorApp2.Data.Accounts
+@using BlazorApp2.Data.Incomes
 
 @inject AuthenticationStateProvider AuthenticationStateProvider
-@inherits OwningComponentBase<AccountService>
+@inject AccountService Service
+@inject IncomeService Service1
 
 <PageTitle>Home</PageTitle>
 <section class="hero is-success is-fullheight">
@@ -44,7 +46,7 @@
                 <div class="spinner"></div>
             }else{
             @foreach(var Account in Accounts){
-                <button class="button is-primary is-inverted is-rounded btn"> @Account.AccountName</button>
+                <button class="button is-primary is-inverted is-rounded btn" @onclick="(() => {account.UpdateAccount(Account);})"> @Account.AccountName</button>
             }
             }
             <button class="button is-primary is-inverted is-rounded btn" @onclick="(()=> {account.show();})">
@@ -93,15 +95,36 @@
         <div class="tile is-parent">
             <div class="tile is-child box">
                 <h1 class="Title has-text-centered">Wpisy</h1>
+            @if(Incomes == null)
+            {
+                <p class="title">Nothings here</p>
+            }
+            else
+            {
                 <table class="table is-fullwidth">
-                    <tbody class="is-primary">
+                    <thead class="is-primary">
                         <tr>
                             <th><i class="fas fa-user"></i></th>
                             <td>Nazwa Konta</td>
                             <td>Kwota</td>
                         </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var Income in Incomes)
+                        {
+                            <tr>
+                                <td>@Income.Id</td>
+                                <td>@Income.AccountName</td>
+                                <td>@Income.Amount</td>
+                                <td>@Income.Data</td>
+                                <td>
+                                    <button class="button is-success" @onclick="(() => {Purchase.Edit(Income);})">Edit</button>
+                                </td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
+            }
             </div>
         </div>
     </div>
@@ -111,6 +134,7 @@
     private AddPurchase Purchase;
     private AddAccount account;
     public List<Account> Accounts;
+    public List<Income> Incomes;
 
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
@@ -119,5 +143,6 @@
     {
         var user = (await authenticationStateTask).User;
         Accounts = await Service.GetAccountsAsync(user.Identity.Name);
+        Incomes = await Service1.GetIncomesAsync(user.Identity.Name);
     }
 }

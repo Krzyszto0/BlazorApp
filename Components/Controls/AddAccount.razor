@@ -2,7 +2,7 @@
 @using BlazorApp2.Data.Accounts
 @using BlazorApp2.Data
 @inject AuthenticationStateProvider AuthenticationStateProvider
-@inherits OwningComponentBase<AccountService>
+@inject AccountService Service
 
 <AuthorizeView>
     <Authorized>
@@ -24,6 +24,10 @@
                     <footer class="modal-card-foot">
                         <button class="button is-success" @onclick="addAccount">Dodaj Konto</button>
                         <button class="button" @onclick="close">Cancel</button>
+                        @if(objAccount.Id != 0)
+                        {
+                            <button class="button is-danger" @onclick="Delete">Delete</button>
+                        }
                     </footer>
                 </div>
             </div>
@@ -87,7 +91,7 @@
     protected override async Task OnInitializedAsync()
     {
         var user = (await authenticationStateTask).User;
-        Accounts = await Service.GetAccountsAsync(user.Identity.Name);
+        // Accounts = await Service.GetAccountsAsync(user.Identity.Name);
     }
 
     async Task addAccount()
@@ -105,5 +109,21 @@
             var result = Service.UpdateAccountAsync(objAccount);
         }
         Accounts = await Service.GetAccountsAsync(user.Identity.Name);
+    }
+
+    public void UpdateAccount(Account account)
+    {
+        objAccount = account;
+        this.display = true;
+        StateHasChanged();
+    }   
+
+    public async Task Delete()
+    {
+        this.display = false;
+        var user = (await authenticationStateTask).User;
+        var result = Service.DeleteAccountAsync(objAccount);
+        Accounts = await Service.GetAccountsAsync(user.Identity.Name);
+        StateHasChanged();
     }
 }

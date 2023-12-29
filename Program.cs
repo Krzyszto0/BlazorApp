@@ -2,6 +2,7 @@ using BlazorApp2.Components;
 using BlazorApp2.Components.Account;
 using BlazorApp2.Data;
 using BlazorApp2.Data.Incomes;
+using BlazorApp2.Data.Outcomes;
 using BlazorApp2.Data.Accounts;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -13,12 +14,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
 builder.Services.AddScoped<IncomeService>();
-builder.Services.AddScoped<AccountService>();
+builder.Services.AddScoped<OutcomeService>();
+builder.Services.AddTransient<AccountService>();
 
 builder.Services.AddAuthentication(options =>
     {
@@ -33,6 +36,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDbContext<IncomeDbContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddDbContext<AccountDbContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<OutcomeDbContext>(options => options.UseSqlServer(connectionString));
 
 builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -40,6 +44,7 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
     .AddDefaultTokenProviders();
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+
 
 var app = builder.Build();
 
@@ -65,5 +70,11 @@ app.MapRazorComponents<App>()
 
 // Add additional endpoints required by the Identity /Account Razor components.
 app.MapAdditionalIdentityEndpoints();
+
+//var scopeFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
+//using (var scope = scopeFactory.CreateScope())
+//{
+//    var db = scope.ServiceProvider.GetRequiredService<AccountService>();
+//}
 
 app.Run();
