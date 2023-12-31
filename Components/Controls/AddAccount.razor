@@ -1,8 +1,7 @@
 ﻿@using BlazorApp2.Components.Account.Pages
-@using BlazorApp2.Data.Accounts
 @using BlazorApp2.Data
 @inject AuthenticationStateProvider AuthenticationStateProvider
-@inject AccountService Service
+@inherits OwningComponentBase<WalletService>
 
 <AuthorizeView>
     <Authorized>
@@ -91,7 +90,7 @@
     protected override async Task OnInitializedAsync()
     {
         var user = (await authenticationStateTask).User;
-        // Accounts = await Service.GetAccountsAsync(user.Identity.Name);
+        Accounts = await Service.GetAccountsAsync(user.Identity.Name);
     }
 
     async Task addAccount()

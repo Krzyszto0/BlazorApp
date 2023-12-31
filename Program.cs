@@ -1,9 +1,6 @@
 using BlazorApp2.Components;
 using BlazorApp2.Components.Account;
 using BlazorApp2.Data;
-using BlazorApp2.Data.Incomes;
-using BlazorApp2.Data.Outcomes;
-using BlazorApp2.Data.Accounts;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -19,9 +16,7 @@ builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
-builder.Services.AddScoped<IncomeService>();
-builder.Services.AddScoped<OutcomeService>();
-builder.Services.AddTransient<AccountService>();
+builder.Services.AddScoped<WalletService>();
 
 builder.Services.AddAuthentication(options =>
     {
@@ -34,9 +29,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-builder.Services.AddDbContext<IncomeDbContext>(options => options.UseSqlServer(connectionString));
-builder.Services.AddDbContext<AccountDbContext>(options => options.UseSqlServer(connectionString));
-builder.Services.AddDbContext<OutcomeDbContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<WalletDBContext>(options => options.UseSqlServer(connectionString));
 
 builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>()

@@ -1,13 +1,16 @@
 ﻿@using BlazorApp2.Components.Account.Pages
-@using BlazorApp2.Data.Incomes
 @using BlazorApp2.Data
 @inject AuthenticationStateProvider AuthenticationStateProvider
-@inherits OwningComponentBase<IncomeService>
+@inherits OwningComponentBase<WalletService>
 
 <AuthorizeView>
     <Authorized>
         @if (display)
         {
+            @if(Accounts == null)
+            {
+                <div class="spinner"></div>
+            }else{
             <div class="modal is-active">
                 <div class="modal-background"></div>
             <div class="modal-card">
@@ -19,28 +22,33 @@
                     <div class="box">
                         <p class="is-info">Konto</p>
 
-                            <div class="dropdown is-active">
-                                <div class="dropdown-trigger">
-                                    <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
-                                        <span>Konto</span>
-                                        <span class="icon is-small">
-                                            <i class="fas fa-angle-down" aria-hidden="true"></i>
-                                        </span>
-                                    </button>
-                                </div>
-                                <div class="dropdown-menu" id="dropdown-menu" role="menu">
-                                    <div class="dropdown-content">
-                                        @foreach(var Income in Incomes){
-                                        <button class="dropdown-item">
-                                            @Income.AccountName  
-                                        </button>
-                                        }
+                                <div class="field">
+                                    <label class="label">Subject</label>
+                                    <div class="control">
+                                        <div class="select">
+                                            <select @bind="AccountForm">
+                                                <option selected>Wybierz Bank</option>
+                                                @foreach (var Account in Accounts)
+                                                {
+                                                    <option value="@Account.Id">
+                                                        @Account.AccountName
+                                                    </option>
+                                                }
+                                            </select>
+                                        </div>
                                     </div>
+                                    @if (NoAccount)
+                                    {
+                                        <span class="has-text-danger">Wybierz Bank</span>
+                                    }
                                 </div>
-                            </div>
-
+                            
                         <p class="is-info">Wartość</p>
                         <input class="input is-medium is-primary" type="number" placeholder="Wprowadź Wartość" @bind="objincome.Amount">
+                        @if (NoAmount)
+                        {
+                            <span class="has-text-danger">Podaj kwotę</span>
+                        }
                     </div>
                 </section>
                 <footer class="modal-card-foot">
@@ -53,6 +61,7 @@
                 </footer>
             </div>
         </div>
+        }
         }
     </Authorized>
     <NotAuthorized>
@@ -91,17 +100,22 @@
 
 @code {
     private bool display;
+    private bool NoAccount;
+    private bool NoAmount;
+    string AccountForm;
 
     Income objincome = new Income();
 
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
     public List<Income> Incomes;
+    public List<Account> Accounts;
 
     protected override async Task OnInitializedAsync()
     {
         var user = (await authenticationStateTask).User;
         Incomes = await Service.GetIncomesAsync(user.Identity.Name);
+        Accounts = await Service.GetAccountsAsync(user.Identity.Name);
     }
 
     public void show()
@@ -121,24 +135,42 @@
 
     async Task SaveIncome()
     {
-        this.display = false;
-        var user = (await authenticationStateTask).User;
-        if(objincome.Id == 0)
+        if (!string.IsNullOrEmpty(AccountForm))
         {
-            Income objNewincome = new Income();
-            objNewincome.Data = System.DateTime.Now;
-            objNewincome.AccountName = objincome.AccountName;
-            objNewincome.Amount = objincome.Amount;
-            objNewincome.UserName = user.Identity.Name;
-            var result = Service.CreateIncomeAsync(objNewincome);
-            StateHasChanged();
+            if (objincome.Amount > 0)
+            {
+                this.NoAccount = false;
+                this.NoAmount = false;
+                this.display = false;
+                var user = (await authenticationStateTask).User;
+                if (objincome.Id == 0)
+                {
+                    Income objNewincome = new Income();
+                    objNewincome.Data = System.DateTime.Now;
+                    objNewincome.AccountId = int.Parse(AccountForm);
+                    objNewincome.Amount = objincome.Amount;
+                    objNewincome.UserName = user.Identity.Name;
+                    var result = Service.CreateIncomeAsync(objNewincome);
+                    StateHasChanged();
+                }
+                else
+                {
+                    var result = Service.UpdateIncomeAsync(objincome);
+                }
+                Incomes = await Service.GetIncomesAsync(user.Identity.Name);
+                StateHasChanged();
+            }
+            else
+            {
+                this.NoAmount = true;
+                StateHasChanged();
+            }
         }
         else
         {
-            var result = Service.UpdateIncomeAsync(objincome);
+            this.NoAccount = true;
+            StateHasChanged();
         }
-        Incomes = await Service.GetIncomesAsync(user.Identity.Name);
-        StateHasChanged();
     }
 
     public void Edit(Income income)
@@ -156,6 +188,5 @@
         Incomes = await Service.GetIncomesAsync(user.Identity.Name);
         StateHasChanged();
     }
-
 
 }
