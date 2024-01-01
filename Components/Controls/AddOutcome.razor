@@ -1,0 +1,194 @@
+﻿@using BlazorApp2.Components.Account.Pages
+@using BlazorApp2.Data
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IJSRuntime JSRuntime
+@inherits OwningComponentBase<WalletService>
+
+<AuthorizeView>
+    <Authorized>
+        @if (display)
+        {
+            @if (Accounts == null)
+            {
+                <div class="spinner"></div>
+            }
+            else
+            {
+                <div class="modal is-active">
+                    <div class="modal-background"></div>
+                    <div class="modal-card">
+                        <header class="modal-card-head">
+                            @if (objoutcome.Id > 0)
+                            {
+                                <p class="modal-card-title">Edytuj Wydatek</p>
+                            }else
+                                {
+                                <p class="modal-card-title">Dodaj Wydatek</p>
+                                }
+                                <button class="delete" aria-label="close" @onclick="close"></button>
+                        </header>
+                        <section class="modal-card-body">
+                            <div class="box">
+                                <p class="is-info">Konto</p>
+                                <div class="field">
+                                    <div class="control">
+                                        <div class="select">
+                                            <select @bind="AccountForm">
+                                                <option selected>Wybierz Bank</option>
+                                                @foreach (var Account in Accounts)
+                                                {
+                                                    <option value="@Account.Id">
+                                                        @Account.AccountName
+                                                    </option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    @if (NoAccount)
+                                    {
+                                        <span class="has-text-danger">Wybierz Bank</span>
+                                    }
+                                </div>
+                                <p class="is-info">Wydatek</p>
+                                <input class="input is-medium is-primary" type="number" step="0.01" placeholder="Wprowadź Wydatek" @bind="objoutcome.Amount">
+                                @if (NoAmount)
+                                {
+                                    <span class="has-text-danger">Podaj kwotę</span>
+                                }
+                            </div>
+                        </section>
+                        <footer class="modal-card-foot">
+                            <button class="button is-success" @onclick="SaveOutcome">Dodaj Wydatek</button>
+                            <button class="button" @onclick="close">Cancel</button>
+                            @if (objoutcome.Id > 0)
+                            {
+                                <button class="button is-danger" @onclick="DeleteOutcome">Delete</button>
+                            }
+                        </footer>
+                    </div>
+                </div>
+            }
+        }
+    </Authorized>
+    <NotAuthorized>
+        @if (display)
+        {
+            <div class="modal is-active">
+                <div class="modal-background"></div>
+                <div class="modal-card">
+                    <header class="modal-card-head">
+                        <p class="modal-card-title">Dodaj Wpis</p>
+                        <button class="delete" aria-label="close" @onclick="close"></button>
+                    </header>
+                    <section class="modal-card-body">
+                        <div class="box">
+                            <div class="columns">
+                                <div class="column">
+                                    <NavLink href="Account/Login">
+                                        <h1 class="button is-success">Zaloguj się</h1>
+                                    </NavLink>
+                                </div>
+                                <div class="column">
+                                    <NavLink href="Account/Register">
+                                        <h1 class="button is-success">Zarejestruj się</h1>
+                                    </NavLink>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        }
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    private bool display;
+    private bool NoAccount;
+    private bool NoAmount;
+    string AccountForm;
+
+    Outcome objoutcome = new Outcome();
+
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+    public List<Outcome> Outcomes;
+    public List<Account> Accounts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = (await authenticationStateTask).User;
+        Accounts = await Service.GetAccountsAsync(user.Identity.Name);
+    }
+
+    public void show()
+    {
+        objoutcome = new Outcome();
+        objoutcome.Id = 0;
+
+        this.display = true;
+        StateHasChanged();
+    }
+
+    public void close()
+    {
+        this.display = false;
+        StateHasChanged();
+    }
+
+    async Task SaveOutcome()
+    {
+        if (!string.IsNullOrEmpty(AccountForm))
+        {
+            if (objoutcome.Amount > 0)
+            {
+                this.NoAccount = false;
+                this.NoAmount = false;
+                this.display = false;
+                var user = (await authenticationStateTask).User;
+                if (objoutcome.Id == 0)
+                {
+                    Outcome objNewoutcome = new Outcome();
+                    objNewoutcome.Data = System.DateTime.Now;
+                    objNewoutcome.AccountId = int.Parse(AccountForm);
+                    objNewoutcome.Amount = -objoutcome.Amount;
+                    objNewoutcome.UserName = user.Identity.Name;
+                    var result = Service.CreateOutcomeAsync(objNewoutcome);
+                    StateHasChanged();
+                }
+                else
+                {
+                    var result = Service.UpdateOutcomeAsync(objoutcome);
+                }
+                Outcomes = await Service.GetOutcomesAsync(user.Identity.Name);
+                StateHasChanged();
+            }
+            else
+            {
+                this.NoAmount = true;
+                StateHasChanged();
+            }
+        }
+        else
+        {
+            this.NoAccount = true;
+            StateHasChanged();
+        }
+    }
+
+    public void EditOutcome(Outcome outcome)
+    {
+        objoutcome = outcome;
+        this.display = true;
+        StateHasChanged();
+    }
+
+    public async Task DeleteOutcome()
+    {
+        this.display = false;
+        var user = (await authenticationStateTask).User;
+        var result = Service.DeleteOutcomeAsync(objoutcome);
+        Outcomes = await Service.GetOutcomesAsync(user.Identity.Name);
+        StateHasChanged();
+    }
+}

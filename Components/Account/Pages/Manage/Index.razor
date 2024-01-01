@@ -10,13 +10,16 @@
 @inject IdentityRedirectManager RedirectManager
 
 <PageTitle>Profile</PageTitle>
-
+<a class="navbar-item" href="">
+    <span class="title">WebWallet</span>
+</a>
 <h3>Profile</h3>
 <StatusMessage />
 
 <div class="row">
     <div class="col-md-6">
         <EditForm Model="Input" FormName="profile" OnValidSubmit="OnValidSubmitAsync" method="post">
+
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" role="alert" />
             <div class="form-floating mb-3">

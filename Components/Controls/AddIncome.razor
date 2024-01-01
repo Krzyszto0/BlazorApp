@@ -1,6 +1,7 @@
 ﻿@using BlazorApp2.Components.Account.Pages
 @using BlazorApp2.Data
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IJSRuntime JSRuntime
 @inherits OwningComponentBase<WalletService>
 
 <AuthorizeView>
@@ -15,36 +16,39 @@
                 <div class="modal-background"></div>
             <div class="modal-card">
                 <header class="modal-card-head">
-                    <p class="modal-card-title">Dodaj Wpis</p>
+                @if (objincome.Id > 0)
+                {
+                    <p class="modal-card-title">Edytuj Przychód</p>
+                }else
+                {
+                    <p class="modal-card-title">Dodaj Przychód</p>
+                }
                     <button class="delete" aria-label="close" @onclick="close"></button>
                 </header>
                 <section class="modal-card-body">
                     <div class="box">
                         <p class="is-info">Konto</p>
-
-                                <div class="field">
-                                    <label class="label">Subject</label>
-                                    <div class="control">
-                                        <div class="select">
-                                            <select @bind="AccountForm">
-                                                <option selected>Wybierz Bank</option>
-                                                @foreach (var Account in Accounts)
-                                                {
-                                                    <option value="@Account.Id">
-                                                        @Account.AccountName
-                                                    </option>
-                                                }
-                                            </select>
-                                        </div>
+                            <div class="field">
+                                <div class="control">
+                                    <div class="select">
+                                        <select @bind="AccountForm">
+                                            <option selected>Wybierz Bank</option>
+                                            @foreach (var Account in Accounts)
+                                            {
+                                                <option value="@Account.Id">
+                                                @Account.AccountName
+                                                </option>
+                                            }
+                                        </select>
                                     </div>
-                                    @if (NoAccount)
-                                    {
-                                        <span class="has-text-danger">Wybierz Bank</span>
-                                    }
                                 </div>
-                            
-                        <p class="is-info">Wartość</p>
-                        <input class="input is-medium is-primary" type="number" placeholder="Wprowadź Wartość" @bind="objincome.Amount">
+                                @if (NoAccount)
+                                {
+                                    <span class="has-text-danger">Wybierz Bank</span>
+                                }
+                            </div>    
+                        <p class="is-info">Przychód</p>
+                                <input class="input is-medium is-primary" type="number" step="0.01" placeholder="Wprowadź Przychód" @bind="objincome.Amount">
                         @if (NoAmount)
                         {
                             <span class="has-text-danger">Podaj kwotę</span>
@@ -54,10 +58,10 @@
                 <footer class="modal-card-foot">
                     <button class="button is-success" @onclick="SaveIncome">Dodaj Przychód</button>
                     <button class="button" @onclick="close">Cancel</button>
-                        @if (objincome.Id > 0)
-                        {
-                            <button class="button is-danger" @onclick="Delete">Delete</button>
-                        }
+                    @if (objincome.Id > 0)
+                    {
+                        <button class="button is-danger" @onclick="DeleteIncome">Delete</button>
+                    }
                 </footer>
             </div>
         </div>
@@ -95,8 +99,6 @@
         }
     </NotAuthorized>
 </AuthorizeView>
-
-
 
 @code {
     private bool display;
@@ -173,14 +175,14 @@
         }
     }
 
-    public void Edit(Income income)
+    public void EditIncome(Income income)
     {
         objincome = income;
         this.display = true;
         StateHasChanged();
     }
 
-    public async Task Delete()
+    public async Task DeleteIncome()
     {
         this.display = false;
         var user = (await authenticationStateTask).User;
@@ -188,5 +190,4 @@
         Incomes = await Service.GetIncomesAsync(user.Identity.Name);
         StateHasChanged();
     }
-
 }

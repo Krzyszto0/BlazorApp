@@ -88,7 +88,7 @@ namespace BlazorApp2.Data
             if (ExistingIncome != null)
             {
                 ExistingIncome.Data = objincome.Data;
-                ExistingIncome.AccountName = objincome.AccountName;
+                ExistingIncome.AccountId = objincome.AccountId;
                 ExistingIncome.Amount = objincome.Amount;
                 ExistingIncome.UserName = objincome.UserName;
                 _context.SaveChanges();
@@ -121,9 +121,9 @@ namespace BlazorApp2.Data
         public async Task<List<Outcome>> GetOutcomesAsync(string strCurrentUser)
         {
             return await _context.Outcome
-                .Where(Half => Half.UserName == strCurrentUser)
+                .Where(h => h.UserName == strCurrentUser)
                 .Include(h => h.AccountName)
-                .OrderByDescending(Half => Half.Data)
+                .OrderByDescending(h => h.Data)
                 .AsNoTracking().ToListAsync();
         }
 
@@ -141,7 +141,7 @@ namespace BlazorApp2.Data
             if (ExistingOutcome != null)
             {
                 ExistingOutcome.Data = objoutcome.Data;
-                ExistingOutcome.AccountName = objoutcome.AccountName;
+                ExistingOutcome.AccountId = objoutcome.AccountId;
                 ExistingOutcome.Amount = objoutcome.Amount;
                 ExistingOutcome.UserName = objoutcome.UserName;
                 _context.SaveChanges();
