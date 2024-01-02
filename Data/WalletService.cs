@@ -2,9 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Globalization;
+using System.Threading;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.VisualBasic;
 
 namespace BlazorApp2.Data
 {
@@ -167,6 +170,44 @@ namespace BlazorApp2.Data
                 return Task.FromResult(false);
             }
             return Task.FromResult(true);
+        }
+
+        //Cashflow Chart
+        List<Cashflow> GetCashflows()
+        {
+            var cashflows = new List<Cashflow>();
+
+            var incomes = _context.Income.ToList();
+            var outcomes = _context.Outcome.ToList();
+
+            var IncomesByMonth = incomes.GroupBy(i => new { i.Data?.Year, i.Data?.Month })
+                .Select(grp => new
+                {
+                    Year = grp.Key.Year,
+                    Month = grp.Key.Month,
+                    allIncome = grp.Sum(i => i.Amount ?? 0)
+                })
+                .ToList();
+
+            var OutcomesByMonth = outcomes.GroupBy(o => new { o.Data?.Year, o.Data?.Month })
+                .Select(grp => new
+                {
+                    Year = grp.Key.Year,
+                    Month = grp.Key.Month,
+                    allOutcome = grp.Sum(i => i.Amount ?? 0)
+                })
+                .ToList();
+
+            foreach (var income in IncomesByMonth)
+            {
+                var OutcomeToIncome = OutcomesByMonth.FirstOrDefault(o => o.Year == income.Year && o.Month == income.Month);
+                var OutcomeSum = OutcomeToIncome?.allOutcome ?? 0;
+                var SumToCashflow = income.allIncome - OutcomeSum;
+
+                var addcashflow = new Cashflow(new DateTime((int)income.Year, (int)income.Month, 1), income.allIncome, OutcomeSum, SumToCashflow);
+                cashflows.Add(addcashflow);
+            }
+            return cashflows;
         }
     }
 }

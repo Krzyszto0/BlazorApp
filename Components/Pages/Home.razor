@@ -152,7 +152,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                            @foreach (var transaction in Transactions)
+                            @foreach (var transaction in Transactions.Take(10))
                             {
                                 @if (transaction.Amount > 0)
                                 {
@@ -201,6 +201,7 @@
     private AddIncome addincome;
     private AddOutcome addoutcome;
     private AddAccount account;
+
     public List<Account> Accounts;
     public List<Income> Incomes;
     public List<Outcome> Outcomes;
@@ -251,4 +252,6 @@
 
         Transactions = combinedTransactions.OrderByDescending(t => t.Date).ToList();
     }
+
+
 }
