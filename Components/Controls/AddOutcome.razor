@@ -149,7 +149,7 @@
                 if (objoutcome.Id == 0)
                 {
                     Outcome objNewoutcome = new Outcome();
-                    objNewoutcome.Data = System.DateTime.Now;
+                    objNewoutcome.Data = System.DateTime.Today;
                     objNewoutcome.AccountId = int.Parse(AccountForm);
                     objNewoutcome.Amount = -objoutcome.Amount;
                     objNewoutcome.UserName = user.Identity.Name;

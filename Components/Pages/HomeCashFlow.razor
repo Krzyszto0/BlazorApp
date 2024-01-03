@@ -2,6 +2,7 @@
 
 @using BlazorApp2.Data
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
 @inherits OwningComponentBase<WalletService>
 
 <PageTitle> CashFlow</PageTitle>
@@ -11,6 +12,38 @@
         <header class="navbar">
             <div class="container">
                 <div class="navbar-brand">
+                    <AuthorizeView>
+                        <Authorized>
+                            <div class="navbar-item">
+                                <NavLink class="nav-link" href="Account/Manage">
+                                    <button class="button">
+                                        @context.User.Identity?.Name
+                                    </button>
+                                </NavLink>
+                            </div>
+                            <div class="navbar-item">
+                                <form action="Account/Logout" method="post">
+                                    <AntiforgeryToken />
+                                    <input type="hidden" name="ReturnUrl" value="@currentUrl" />
+                                    <button class="button">
+                                        Logout
+                                    </button>
+                                </form>
+                            </div>
+                        </Authorized>
+                        <NotAuthorized>
+                            <div class="navbar-item">
+                                <NavLink class="nav-link" href="Account/Register">
+                                    <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Register
+                                </NavLink>
+                            </div>
+                            <div class="navbar-item">
+                                <NavLink class="nav-link" href="Account/Login">
+                                    <span class="bi bi-person-badge-nav-menu" aria-hidden="true"></span> Login
+                                </NavLink>
+                            </div>
+                        </NotAuthorized>
+                    </AuthorizeView>
                     <a class="navbar-item" href="">
                         <span class="title">WebWallet</span>
                     </a>
@@ -119,6 +152,24 @@
 
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    private string? currentUrl;
+    protected override void OnInitialized()
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        NavigationManager.LocationChanged += OnLocationChanged;
+    }
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        NavigationManager.LocationChanged -= OnLocationChanged;
+    }
 
     protected override async Task OnInitializedAsync()
     {

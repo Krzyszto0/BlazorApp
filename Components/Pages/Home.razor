@@ -1,7 +1,9 @@
 ﻿@page "/"
 @using BlazorApp2.Data
+@using Syncfusion.Blazor.Charts
 
 @implements IDisposable
+@inject IJSRuntime JSRuntime
 
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -12,7 +14,7 @@
     <!-- Hero head: will stick at the top -->
     <div class="hero-head">
         <header class="navbar">
-            <div class="container">
+            <div class="container is-fluid">
                 <div class="navbar-brand">
                     <AuthorizeView>
                         <Authorized>
@@ -46,8 +48,8 @@
                             </div>
                         </NotAuthorized>
                     </AuthorizeView>
-                    <a class="navbar-item" href="">
-                        <span class="title">WebWallet</span>
+                    <a class="navbar-item has-text-centered" href="">
+                        <span class="title has-text-centered">WebWallet</span>
                     </a>
                 </div>
                 <div id="navbarMenuHeroC" class="navbar-menu">
@@ -102,35 +104,46 @@
 
         <div class="tile is-4 is-vertical is-parent">
             <div class="tile is-child box">
-                <h1 class="Title">Przepływ pieniędzy $$$,$$</h1>
+                <h1 class="Title">Przepływ pieniędzy 
+                    <span class="tag is-rounded is-large" style="margin-left: 70px">@Math.Round(CashFlows.Sum(cf => cf.CashFlow),2) PLN</span>
+                </h1>   
                 <!-- Tu będzie wykres -->
-                <canvas id="Cashflow" style="width: 100%"></canvas>
-                <script>
-                    var xValues = [1, 2, 3, 4, 5, 6];
-                    var yValues = [800, 900, 500, 220, 1200, 530];
 
-                    new Chart("Cashflow", {
-                        type: "line",
-                        data: {
-                            labels: xValues,
-                            datasets: [
-                                {
-                                    data: yValues,
-                                    borderColor: "blue"
-                                },
-                            ]
-                        },
-                        options: {
-                            legend: { display: false }
-                        }
-                    });
-                </script>
+                <SfChart Width="500px" Height="300px">
+                    <ChartPrimaryXAxis IntervalType="IntervalType.Months" LabelFormat="MMM" ValueType="Syncfusion.Blazor.Charts.ValueType.DateTime">
+                    </ChartPrimaryXAxis>
+                    <ChartSeriesCollection>
+                        <ChartSeries DataSource="@CashFlows" XName="Month" YName="CashFlow" Type="ChartSeriesType.Line">
+                        </ChartSeries>
+                    </ChartSeriesCollection>
+                </SfChart>
+
             </div>
             <div class="tile is-child box">
-                <h1 class="Title">Przychód $$$,$$</h1>
-                <progress class="progress is-primary" value="100" max="100">15%</progress>
-                <h1 class="Title">Wydatki $$$,$$</h1>
-                <progress class="progress is-danger" value="20" max="100">15%</progress>
+                @if (CashFlows.Sum(cf => cf.Outcome) < CashFlows.Sum(cf => cf.Income))
+                {
+                    <h1 class="Title">Przychód 
+                    <span class="tag is-rounded is-large" style="margin-left: 210px">@Math.Round(CashFlows.Sum(cf => cf.Income), 2) PLN</span>
+                    </h1>
+                    <progress class="progress is-primary" value="@Math.Round(CashFlows.Sum(cf => cf.Income), 0)" max="@Math.Round(CashFlows.Sum(cf => cf.Income), 0)">15%</progress>
+                    <h1 class="Title">Wydatki 
+                        <span class="tag is-rounded is-large" style="margin-left: 240px">@Math.Round(CashFlows.Sum(cf => cf.Outcome), 2) PLN</span>
+                    </h1>
+                    <progress class="progress is-danger" value="@Math.Round(Math.Abs(CashFlows.Sum(cf => cf.Outcome)), 0)" max="@Math.Round(CashFlows.Sum(cf => cf.Income), 0)">15%</progress>
+                }
+                else
+                {
+                    <h1 class="Title">
+                        Przychód
+                        <span class="tag is-rounded is-large" style="margin-left: 210px">@Math.Round(CashFlows.Sum(cf => cf.Income), 2) PLN</span>
+                    </h1>
+                    <progress class="progress is-primary" value="@Math.Round(CashFlows.Sum(cf => cf.Income), 0)" max="@Math.Round(Math.Abs(CashFlows.Sum(cf => cf.Outcome)), 0)">15%</progress>
+                    <h1 class="Title">
+                        Wydatki
+                        <span class="tag is-rounded is-large" style="margin-left: 240px">@Math.Round(CashFlows.Sum(cf => cf.Outcome), 2) PLN</span>
+                    </h1>
+                    <progress class="progress is-danger" value="@Math.Round(Math.Abs(CashFlows.Sum(cf => cf.Outcome)), 0)" max="@Math.Round(Math.Abs(CashFlows.Sum(cf => cf.Outcome)), 0)">15%</progress>
+                }
             </div>
         </div>
 
@@ -206,6 +219,7 @@
     public List<Income> Incomes;
     public List<Outcome> Outcomes;
     public List<Transaction> Transactions = new List<Transaction>();
+    public List<Cashflow> CashFlows = new List<Cashflow>();
 
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
@@ -216,6 +230,8 @@
     {
         currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
         NavigationManager.LocationChanged += OnLocationChanged;
+
+        CashFlows = Service.GetCashflows();
     }
 
     private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
@@ -251,6 +267,8 @@
             }));
 
         Transactions = combinedTransactions.OrderByDescending(t => t.Date).ToList();
+
+        CashFlows =  Service.GetCashflows();
     }
 
 

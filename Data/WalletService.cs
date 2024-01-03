@@ -173,7 +173,7 @@ namespace BlazorApp2.Data
         }
 
         //Cashflow Chart
-        List<Cashflow> GetCashflows()
+        public List<Cashflow> GetCashflows()
         {
             var cashflows = new List<Cashflow>();
 
@@ -202,7 +202,7 @@ namespace BlazorApp2.Data
             {
                 var OutcomeToIncome = OutcomesByMonth.FirstOrDefault(o => o.Year == income.Year && o.Month == income.Month);
                 var OutcomeSum = OutcomeToIncome?.allOutcome ?? 0;
-                var SumToCashflow = income.allIncome - OutcomeSum;
+                var SumToCashflow = income.allIncome + OutcomeSum;
 
                 var addcashflow = new Cashflow(new DateTime((int)income.Year, (int)income.Month, 1), income.allIncome, OutcomeSum, SumToCashflow);
                 cashflows.Add(addcashflow);

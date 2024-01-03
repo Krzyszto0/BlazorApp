@@ -148,7 +148,7 @@
                 if (objincome.Id == 0)
                 {
                     Income objNewincome = new Income();
-                    objNewincome.Data = System.DateTime.Now;
+                    objNewincome.Data = System.DateTime.Today;
                     objNewincome.AccountId = int.Parse(AccountForm);
                     objNewincome.Amount = objincome.Amount;
                     objNewincome.UserName = user.Identity.Name;
