@@ -173,12 +173,16 @@ namespace BlazorApp2.Data
         }
 
         //Cashflow Chart
-        public List<Cashflow> GetCashflows()
+        public List<Cashflow> GetCashflows(string strCurrentUser)
         {
             var cashflows = new List<Cashflow>();
 
-            var incomes = _context.Income.ToList();
-            var outcomes = _context.Outcome.ToList();
+            var incomes = _context.Income
+                .Where(i => i.UserName == strCurrentUser)
+                .ToList();
+            var outcomes = _context.Outcome
+                .Where(o => o.UserName == strCurrentUser)
+                .ToList();
 
             var IncomesByMonth = incomes.GroupBy(i => new { i.Data?.Year, i.Data?.Month })
                 .Select(grp => new

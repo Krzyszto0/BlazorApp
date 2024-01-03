@@ -230,8 +230,6 @@
     {
         currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
         NavigationManager.LocationChanged += OnLocationChanged;
-
-        CashFlows = Service.GetCashflows();
     }
 
     private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
@@ -268,7 +266,7 @@
 
         Transactions = combinedTransactions.OrderByDescending(t => t.Date).ToList();
 
-        CashFlows =  Service.GetCashflows();
+        CashFlows =  Service.GetCashflows(user.Identity.Name);
     }
 
 
