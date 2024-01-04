@@ -14,7 +14,7 @@ namespace BlazorApp2.Data
         public int Id { get; set; }
         public int AccountId { get; set; }
         [Column(TypeName = "datetime")]
-        public DateTime? Data { get; set; }
+        public DateTime Data { get; set; }
         public Account AccountName { get; set; }
         public double? Amount { get; set; }
         [StringLength(100)]

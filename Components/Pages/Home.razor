@@ -90,10 +90,10 @@
                 <div class="spinner"></div>
             }else{
             @foreach(var Account in Accounts){
-                <button class="button is-primary is-inverted is-rounded btn" @onclick="(() => {account.UpdateAccount(Account);})"> @Account.AccountName</button>
+                    <button class="button is-primary is-inverted is-rounded btn" style="margin-bottom: 12px;" @onclick="(() => {account.UpdateAccount(Account);})"> @Account.AccountName</button>
             }
             }
-            <button class="button is-primary is-inverted is-rounded btn" @onclick="(()=> {account.show();})">
+            <button class="button is-primary is-inverted is-rounded btn" style="margin-bottom: 12px;" @onclick="(()=> {account.show();})">
                 <span class="icon">
                     <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path fill="#24d160" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM232 344V280H168c-13.3 0-24-10.7-24-24s10.7-24 24-24h64V168c0-13.3 10.7-24 24-24s24 10.7 24 24v64h64c13.3 0 24 10.7 24 24s-10.7 24-24 24H280v64c0 13.3-10.7 24-24 24s-24-10.7-24-24z" /></svg>
                 </span>
@@ -127,7 +127,7 @@
                     </h1>
                     <progress class="progress is-primary" value="@Math.Round(CashFlows.Sum(cf => cf.Income), 0)" max="@Math.Round(CashFlows.Sum(cf => cf.Income), 0)">15%</progress>
                     <h1 class="Title">Wydatki 
-                        <span class="tag is-rounded is-large" style="margin-left: 240px">@Math.Round(CashFlows.Sum(cf => cf.Outcome), 2) PLN</span>
+                        <span class="tag is-rounded is-large" style="margin-left: 220px">@Math.Round(CashFlows.Sum(cf => cf.Outcome), 2) PLN</span>
                     </h1>
                     <progress class="progress is-danger" value="@Math.Round(Math.Abs(CashFlows.Sum(cf => cf.Outcome)), 0)" max="@Math.Round(CashFlows.Sum(cf => cf.Income), 0)">15%</progress>
                 }
@@ -135,12 +135,12 @@
                 {
                     <h1 class="Title">
                         Przychód
-                        <span class="tag is-rounded is-large" style="margin-left: 210px">@Math.Round(CashFlows.Sum(cf => cf.Income), 2) PLN</span>
+                        <span class="tag is-rounded is-large" style="margin-left: 220px">@Math.Round(CashFlows.Sum(cf => cf.Income), 2) PLN</span>
                     </h1>
                     <progress class="progress is-primary" value="@Math.Round(CashFlows.Sum(cf => cf.Income), 0)" max="@Math.Round(Math.Abs(CashFlows.Sum(cf => cf.Outcome)), 0)">15%</progress>
                     <h1 class="Title">
                         Wydatki
-                        <span class="tag is-rounded is-large" style="margin-left: 240px">@Math.Round(CashFlows.Sum(cf => cf.Outcome), 2) PLN</span>
+                        <span class="tag is-rounded is-large" style="margin-left: 220px">@Math.Round(CashFlows.Sum(cf => cf.Outcome), 2) PLN</span>
                     </h1>
                     <progress class="progress is-danger" value="@Math.Round(Math.Abs(CashFlows.Sum(cf => cf.Outcome)), 0)" max="@Math.Round(Math.Abs(CashFlows.Sum(cf => cf.Outcome)), 0)">15%</progress>
                 }
@@ -175,7 +175,7 @@
                                         </td>
                                         <td class="has-text-success">@transaction.AccountName</td>
                                         <td class="has-text-success">@transaction.Amount</td>
-                                        <td class="has-text-success">@transaction.Date</td>
+                                        <td class="has-text-success">@transaction.Date.ToShortDateString()</td>
                                         <td>
                                             @if (Incomes.Any(i => i.Id == transaction.Id))
                                             {
@@ -192,7 +192,7 @@
                                         </td>
                                         <td class="has-text-danger">@transaction.AccountName</td>
                                         <td class="has-text-danger">@transaction.Amount</td>
-                                        <td class="has-text-danger">@transaction.Date</td>
+                                        <td class="has-text-danger">@transaction.Date.ToShortDateString()</td>
                                         <td>
                                             @if (Outcomes.Any(i => i.Id == transaction.Id))
                                             {

@@ -108,7 +108,7 @@
                                     </td>
                                     <td class="has-text-success">@transaction.AccountName</td>
                                     <td class="has-text-success">@transaction.Amount</td>
-                                    <td class="has-text-success">@transaction.Date</td>
+                                    <td class="has-text-success">@transaction.Date.ToShortDateString()</td>
                                     <td>
                                         @if (Incomes.Any(i => i.Id == transaction.Id))
                                         {
@@ -125,7 +125,7 @@
                                     </td>
                                     <td class="has-text-danger">@transaction.AccountName</td>
                                     <td class="has-text-danger">@transaction.Amount</td>
-                                    <td class="has-text-danger">@transaction.Date</td>
+                                    <td class="has-text-danger">@transaction.Date.ToShortDateString()</td>
                                     <td>
                                         @if (Outcomes.Any(i => i.Id == transaction.Id))
                                         {

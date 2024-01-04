@@ -32,9 +32,8 @@
                                 <p class="is-info">Konto</p>
                                 <div class="field">
                                     <div class="control">
-                                        <div class="select">
-                                            <select @bind="AccountForm">
-                                                <option selected>Wybierz Bank</option>
+                                        <div class="select is-primary">
+                                            <select @bind="objoutcome.AccountId">
                                                 @foreach (var Account in Accounts)
                                                 {
                                                     <option value="@Account.Id">
@@ -55,6 +54,8 @@
                                 {
                                     <span class="has-text-danger">Podaj kwotę</span>
                                 }
+                                <p class="is-info">Data</p>
+                                <input type="date" class="input is-primary" @bind="objoutcome.Data" />
                             </div>
                         </section>
                         <footer class="modal-card-foot">
@@ -106,7 +107,6 @@
     private bool display;
     private bool NoAccount;
     private bool NoAmount;
-    string AccountForm;
 
     Outcome objoutcome = new Outcome();
 
@@ -124,6 +124,7 @@
     public void show()
     {
         objoutcome = new Outcome();
+        objoutcome.Data = DateTime.Today;
         objoutcome.Id = 0;
 
         this.display = true;
@@ -138,9 +139,9 @@
 
     async Task SaveOutcome()
     {
-        if (!string.IsNullOrEmpty(AccountForm))
+        if (objoutcome.AccountId != 0)
         {
-            if (objoutcome.Amount > 0)
+            if (objoutcome.Amount > 0 || objoutcome.Amount < 0)
             {
                 this.NoAccount = false;
                 this.NoAmount = false;
@@ -149,15 +150,23 @@
                 if (objoutcome.Id == 0)
                 {
                     Outcome objNewoutcome = new Outcome();
-                    objNewoutcome.Data = System.DateTime.Today;
-                    objNewoutcome.AccountId = int.Parse(AccountForm);
-                    objNewoutcome.Amount = -objoutcome.Amount;
+                    objNewoutcome.Data = objoutcome.Data;
+                    objNewoutcome.AccountId = objoutcome.AccountId;
+                    if (objoutcome.Amount > 0)
+                    {
+                        objNewoutcome.Amount = -objoutcome.Amount;
+                    }
+                    else
+                    {
+                        objNewoutcome.Amount = objoutcome.Amount;
+                    }
                     objNewoutcome.UserName = user.Identity.Name;
                     var result = Service.CreateOutcomeAsync(objNewoutcome);
                     StateHasChanged();
                 }
                 else
-                {
+                {   
+                    objoutcome.AccountId = objoutcome.AccountId;
                     var result = Service.UpdateOutcomeAsync(objoutcome);
                 }
                 Outcomes = await Service.GetOutcomesAsync(user.Identity.Name);

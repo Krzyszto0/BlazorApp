@@ -30,9 +30,8 @@
                         <p class="is-info">Konto</p>
                             <div class="field">
                                 <div class="control">
-                                    <div class="select">
-                                        <select @bind="AccountForm">
-                                            <option selected>Wybierz Bank</option>
+                                    <div class="select is-primary">
+                                        <select @bind="objincome.AccountId">
                                             @foreach (var Account in Accounts)
                                             {
                                                 <option value="@Account.Id">
@@ -53,6 +52,8 @@
                         {
                             <span class="has-text-danger">Podaj kwotę</span>
                         }
+                        <p class="is-info">Data</p>
+                        <input type="date" class="input is-primary" @bind="objincome.Data"/>
                     </div>
                 </section>
                 <footer class="modal-card-foot">
@@ -123,6 +124,7 @@
     public void show()
     {
         objincome = new Income();
+        objincome.Data = DateTime.Today;
         objincome.Id = 0;
 
         this.display = true;
@@ -137,9 +139,9 @@
 
     async Task SaveIncome()
     {
-        if (!string.IsNullOrEmpty(AccountForm))
+        if (objincome.AccountId != 0)
         {
-            if (objincome.Amount > 0)
+            if (objincome.Amount > 0 || objincome.Amount < 0)
             {
                 this.NoAccount = false;
                 this.NoAmount = false;
@@ -148,15 +150,23 @@
                 if (objincome.Id == 0)
                 {
                     Income objNewincome = new Income();
-                    objNewincome.Data = System.DateTime.Today;
-                    objNewincome.AccountId = int.Parse(AccountForm);
-                    objNewincome.Amount = objincome.Amount;
+                    objNewincome.Data = objincome.Data;
+                    objNewincome.AccountId = objincome.AccountId;
+                    if (objincome.Amount > 0)
+                    {
+                        objNewincome.Amount = objincome.Amount;
+                    }
+                    else
+                    {
+                        objNewincome.Amount = -objincome.Amount;
+                    }
                     objNewincome.UserName = user.Identity.Name;
                     var result = Service.CreateIncomeAsync(objNewincome);
                     StateHasChanged();
                 }
                 else
                 {
+                    objincome.AccountId = objincome.AccountId;
                     var result = Service.UpdateIncomeAsync(objincome);
                 }
                 Incomes = await Service.GetIncomesAsync(user.Identity.Name);

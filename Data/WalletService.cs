@@ -145,7 +145,14 @@ namespace BlazorApp2.Data
             {
                 ExistingOutcome.Data = objoutcome.Data;
                 ExistingOutcome.AccountId = objoutcome.AccountId;
-                ExistingOutcome.Amount = objoutcome.Amount;
+                if (objoutcome.Amount > 0)
+                {
+                    ExistingOutcome.Amount = -objoutcome.Amount;
+                }
+                else
+                {
+                    ExistingOutcome.Amount = objoutcome.Amount;
+                }
                 ExistingOutcome.UserName = objoutcome.UserName;
                 _context.SaveChanges();
             }
@@ -184,7 +191,7 @@ namespace BlazorApp2.Data
                 .Where(o => o.UserName == strCurrentUser)
                 .ToList();
 
-            var IncomesByMonth = incomes.GroupBy(i => new { i.Data?.Year, i.Data?.Month })
+            var IncomesByMonth = incomes.GroupBy(i => new { i.Data.Year, i.Data.Month })
                 .Select(grp => new
                 {
                     Year = grp.Key.Year,
@@ -193,7 +200,7 @@ namespace BlazorApp2.Data
                 })
                 .ToList();
 
-            var OutcomesByMonth = outcomes.GroupBy(o => new { o.Data?.Year, o.Data?.Month })
+            var OutcomesByMonth = outcomes.GroupBy(o => new { o.Data.Year, o.Data.Month })
                 .Select(grp => new
                 {
                     Year = grp.Key.Year,
