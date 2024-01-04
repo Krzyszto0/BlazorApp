@@ -110,17 +110,17 @@
                 <!-- Tu będzie wykres -->
 
                 <SfChart Width="500px" Height="300px">
-                    <ChartPrimaryXAxis IntervalType="IntervalType.Months" LabelFormat="MMM" ValueType="Syncfusion.Blazor.Charts.ValueType.DateTime">
+                    <ChartPrimaryXAxis IntervalType="IntervalType.Months" LabelFormat="MM.yy" ValueType="Syncfusion.Blazor.Charts.ValueType.DateTimeCategory">
                     </ChartPrimaryXAxis>
                     <ChartSeriesCollection>
-                        <ChartSeries DataSource="@CashFlows" XName="Month" YName="CashFlow" Type="ChartSeriesType.Line">
-                        </ChartSeries>
+                            <ChartSeries DataSource="@CashFlows.Take(12).ToList()" XName="Month" YName="CashFlow" Type="ChartSeriesType.Column">
+                            </ChartSeries>
                     </ChartSeriesCollection>
                 </SfChart>
 
             </div>
             <div class="tile is-child box">
-                @if (CashFlows.Sum(cf => cf.Outcome) < CashFlows.Sum(cf => cf.Income))
+                @if (Math.Abs(CashFlows.Sum(cf => cf.Outcome)) < CashFlows.Sum(cf => cf.Income))
                 {
                     <h1 class="Title">Przychód 
                     <span class="tag is-rounded is-large" style="margin-left: 210px">@Math.Round(CashFlows.Sum(cf => cf.Income), 2) PLN</span>
@@ -266,8 +266,6 @@
 
         Transactions = combinedTransactions.OrderByDescending(t => t.Date).ToList();
 
-        CashFlows =  Service.GetCashflows(user.Identity.Name);
+        CashFlows =  Service.GetCashflows(user.Identity.Name).OrderBy(s => s.Month).ToList();
     }
-
-
 }
