@@ -112,6 +112,9 @@
 
     Outcome objoutcome = new Outcome();
 
+    [Parameter]
+    public EventCallback SavedOutcome { get; set; }
+
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
     public List<Outcome> Outcomes;
@@ -172,8 +175,8 @@
                     objoutcome.AccountId = objoutcome.AccountId;
                     var result = Service.UpdateOutcomeAsync(objoutcome);
                 }
-                Outcomes = await Service.GetOutcomesAsync(user.Identity.Name);
-                StateHasChanged();
+                await SavedOutcome.InvokeAsync();
+
             }
             else
             {
@@ -188,10 +191,11 @@
         }
     }
 
-    public void EditOutcome(Outcome outcome)
+    public async Task EditOutcome(Outcome outcome)
     {
         objoutcome = outcome;
         this.display = true;
+        await SavedOutcome.InvokeAsync();
         StateHasChanged();
     }
 
@@ -200,6 +204,7 @@
         this.display = false;
         var user = (await authenticationStateTask).User;
         var result = Service.DeleteOutcomeAsync(objoutcome);
+        await SavedOutcome.InvokeAsync();
         StateHasChanged();
     }
 }

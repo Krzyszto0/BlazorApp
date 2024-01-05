@@ -1,5 +1,7 @@
 ﻿@using BlazorApp2.Components.Account.Pages
 @using BlazorApp2.Data
+@using BlazorApp2.Components.Pages
+
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IJSRuntime JSRuntime
 @inherits OwningComponentBase<WalletService>
@@ -102,12 +104,16 @@
 </AuthorizeView>
 
 @code {
+    private Home home;
     private bool display;
     private bool NoAccount;
     private bool NoAmount;
     string AccountForm;
 
     Income objincome = new Income();
+
+    [Parameter]
+    public EventCallback SavedIncome { get; set; }
 
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
@@ -169,8 +175,7 @@
                     objincome.AccountId = objincome.AccountId;
                     var result = Service.UpdateIncomeAsync(objincome);
                 }
-                Incomes = await Service.GetIncomesAsync(user.Identity.Name);
-                StateHasChanged();
+                await SavedIncome.InvokeAsync();
             }
             else
             {
@@ -185,10 +190,11 @@
         }
     }
 
-    public void EditIncome(Income income)
+    public async Task EditIncome(Income income)
     {
         objincome = income;
         this.display = true;
+        await SavedIncome.InvokeAsync();
         StateHasChanged();
     }
 
@@ -198,6 +204,7 @@
         var user = (await authenticationStateTask).User;
         var result = Service.DeleteIncomeAsync(objincome);
         Incomes = await Service.GetIncomesAsync(user.Identity.Name);
+        await SavedIncome.InvokeAsync();
         StateHasChanged();
     }
 }

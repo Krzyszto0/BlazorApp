@@ -60,7 +60,7 @@
                                 </span>
                                 <span>Dodaj Przychód</span>
                             </button>
-                            <AddIncome @ref="addincome"></AddIncome>
+                            <AddIncome @ref="addincome" SavedIncome="Refresh"></AddIncome>
                         </span>
 
                         <span class="navbar-item">
@@ -70,7 +70,7 @@
                                 </span>
                                 <span>Dodaj Wydatek</span>
                             </button>
-                            <AddOutcome @ref="addoutcome"></AddOutcome>
+                            <AddOutcome @ref="addoutcome" SavedOutcome="Refresh"></AddOutcome>
                         </span>
                     </div>
                 </div>
@@ -113,6 +113,7 @@
                                         @if (Incomes.Any(i => i.Id == transaction.Id))
                                         {
                                             <button class="button is-success" @onclick="(() => { addincome.EditIncome(Incomes.First(i => i.Id == transaction.Id)); })">Edit</button>
+                                            <AddIncome @ref="addincome" SavedIncome="Refresh"></AddIncome>
                                         }
                                     </td>
                                 </tr>
@@ -130,6 +131,7 @@
                                         @if (Outcomes.Any(i => i.Id == transaction.Id))
                                         {
                                             <button class="button is-danger" @onclick="(() => { addoutcome.EditOutcome(Outcomes.First(i => i.Id == transaction.Id)); })">Edit</button>
+                                            <AddOutcome @ref="addoutcome" SavedOutcome="Refresh"></AddOutcome>
                                         }
                                     </td>
                                 </tr>
@@ -192,5 +194,10 @@
             }));
 
         Transactions = combinedTransactions.OrderByDescending(t => t.Date).ToList();
+    }
+
+    public async Task Refresh()
+    {
+        await OnInitializedAsync();
     }
 }
