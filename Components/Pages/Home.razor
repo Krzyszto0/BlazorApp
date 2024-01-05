@@ -84,7 +84,7 @@
 
     <!-- Hero content: will be in the middle -->
     <div class="hero-body tile is-ancestor">
-        <div class="tile is-3 is-vertical is-parent">
+        <div class="tile is-2 is-vertical is-parent">
             @if(Accounts == null)
             {
                 <div class="spinner"></div>
@@ -102,21 +102,31 @@
             <AddAccount @ref="account"></AddAccount>
         </div>
 
-        <div class="tile is-4 is-vertical is-parent">
+        <div class="tile is-5 is-vertical is-parent">
             <div class="tile is-child box">
                 <h1 class="Title">Przepływ pieniędzy 
-                    <span class="tag is-rounded is-large" style="margin-left: 70px">@Math.Round(CashFlows.Sum(cf => cf.CashFlow),2) PLN</span>
+                    <span class="tag is-rounded is-large block">@Math.Round(CashFlows.Sum(cf => cf.CashFlow),2) PLN</span>
                 </h1>   
                 <!-- Tu będzie wykres -->
-
-                <SfChart Width="500px" Height="300px">
+                <div class="has-text-centered">
+                <SfChart Width="600px" Height="400px">
                     <ChartPrimaryXAxis IntervalType="IntervalType.Months" LabelFormat="MM.yy" ValueType="Syncfusion.Blazor.Charts.ValueType.DateTimeCategory">
                     </ChartPrimaryXAxis>
+                    <ChartTooltipSettings Enable="true">
+                        <ChartTooltipBorder Color="#FF0000" Width="2"></ChartTooltipBorder>
+                    </ChartTooltipSettings>
                     <ChartSeriesCollection>
                             <ChartSeries DataSource="@CashFlows.Take(12).ToList()" XName="Month" YName="CashFlow" Type="ChartSeriesType.Column">
                             </ChartSeries>
                     </ChartSeriesCollection>
                 </SfChart>
+                </div>
+
+                @foreach(var cf in CashFlows.Take(12))
+                {
+                    <p>@cf.CashFlow</p>
+                }
+
 
             </div>
             <div class="tile is-child box">
