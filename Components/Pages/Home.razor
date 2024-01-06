@@ -91,6 +91,7 @@
             }else{
             @foreach(var Account in Accounts){
                     <button class="button is-primary is-inverted is-rounded btn" style="margin-bottom: 12px;" @onclick="(() => {account.UpdateAccount(Account);})"> @Account.AccountName</button>
+                    <AddAccount @ref="account" SavedAccount="Refresh"></AddAccount>
             }
             }
             <button class="button is-primary is-inverted is-rounded btn" style="margin-bottom: 12px;" @onclick="(()=> {account.show();})">
@@ -99,7 +100,7 @@
                 </span>
                 <span>Add Account</span>
             </button>
-            <AddAccount @ref="account"></AddAccount>
+            <AddAccount @ref="account" SavedAccount="Refresh"></AddAccount>
         </div>
 
         <div class="tile is-5 is-vertical is-parent">
@@ -113,9 +114,6 @@
                 <SfChart Width="600px" Height="400px">
                     <ChartPrimaryXAxis IntervalType="IntervalType.Months" LabelFormat="MM.yy" ValueType="Syncfusion.Blazor.Charts.ValueType.DateTimeCategory">
                     </ChartPrimaryXAxis>
-                    <ChartTooltipSettings Enable="true">
-                        <ChartTooltipBorder Color="#FF0000" Width="2"></ChartTooltipBorder>
-                    </ChartTooltipSettings>
                     <ChartSeriesCollection>
                             <ChartSeries DataSource="@CashFlows.Take(12).ToList()" XName="Month" YName="CashFlow" Type="ChartSeriesType.Spline">
                             </ChartSeries>
