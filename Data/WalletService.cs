@@ -215,7 +215,7 @@ namespace BlazorApp2.Data
                 var OutcomeSum = OutcomeToIncome?.allOutcome ?? 0;
                 var SumToCashflow = income.allIncome + OutcomeSum;
 
-                var addcashflow = new Cashflow(new DateTime((int)income.Year, (int)income.Month, 1), income.allIncome, OutcomeSum, SumToCashflow);
+                var addcashflow = new Cashflow(new DateTime(income.Year, income.Month, 1), income.allIncome, OutcomeSum, SumToCashflow);
                 cashflows.Add(addcashflow);
             }
             return cashflows;
