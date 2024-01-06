@@ -48,13 +48,13 @@
                             </div>
                         </NotAuthorized>
                     </AuthorizeView>
-                    <a class="navbar-item has-text-centered" href="">
+                    <a class="navbar-item has-text-centered" href="" style="text-decoration:none;">
                         <span class="title has-text-centered">WebWallet</span>
                     </a>
                 </div>
                 <div id="navbarMenuHeroC" class="navbar-menu">
                     <div class="navbar-end">
-                        <a class="navbar-item" href="CashFlow">
+                        <a class="navbar-item" href="CashFlow" style="text-decoration:none;">
                             Przepływ pieniędzy
                         </a>
                         <span class="navbar-item">
@@ -108,9 +108,11 @@
                 <h1 class="Title has-text-right">
                     Przepływ pieniędzy
                     <span class="tag is-rounded is-large block">@Math.Round(CashFlows.Sum(cf => cf.CashFlow),2) PLN</span>
-                </h1>   
-
+                </h1>  
+                
+                <center>
                 <LineChart @ref="lineChart" Width="600"></LineChart>
+                </center>
 
             </div>
             <div class="tile is-child is-block box">
