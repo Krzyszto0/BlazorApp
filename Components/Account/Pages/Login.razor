@@ -54,28 +54,25 @@
                     </div>
                     <div class="form-floating mb-3">
                         <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
-                        <label for="password" class="form-label">Password</label>
+                        <label for="password" class="form-label">Hasło</label>
                         <ValidationMessage For="() => Input.Password" class="text-danger" />
                     </div>
                     <div class="checkbox mb-3">
                         <label class="form-label">
                             <InputCheckbox @bind-Value="Input.RememberMe" class="darker-border-checkbox form-check-input" />
-                            Remember me
+                            Zapamiętaj mnie
                         </label>
                     </div>
                     <div>
-                        <button type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
+                            <button type="submit" class="button is-primary" style="text-decoration: none;">Zaloguj się</button>
                     </div>
                     <div class="block">
                     <div class="columns">
                         <p class="column">
-                            <a class="button" href="Account/ForgotPassword">Forgot your password?</a>
+                                    <a class="button" href="Account/ForgotPassword" style="text-decoration: none;">Nie pamiętam hasła?</a>
                         </p>
                         <p class="column">
-                            <a class="button" href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Register as a new user</a>
-                        </p>
-                        <p class="column">
-                            <a class="button" href="Account/ResendEmailConfirmation">Resend email confirmation</a>
+                            <a class="button" href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Nie mam konta</a>
                         </p>
                     </div>
                     </div>

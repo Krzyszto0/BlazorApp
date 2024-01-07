@@ -60,10 +60,10 @@
                 </section>
                 <footer class="modal-card-foot">
                     <button class="button is-success" @onclick="SaveIncome">Dodaj Przychód</button>
-                    <button class="button" @onclick="close">Cancel</button>
+                    <button class="button" @onclick="close">Wyjdź</button>
                     @if (objincome.Id > 0)
                     {
-                        <button class="button is-danger" @onclick="DeleteIncome">Delete</button>
+                        <button class="button is-danger" @onclick="DeleteIncome">Usuń</button>
                     }
                 </footer>
             </div>
@@ -78,7 +78,7 @@
                 <div class="modal-background"></div>
                 <div class="modal-card">
                     <header class="modal-card-head">
-                        <p class="modal-card-title">Dodaj Wpis</p>
+                        <p class="modal-card-title">Dodaj Przychód</p>
                         <button class="delete" aria-label="close" @onclick="close"></button>
                     </header>
                     <section class="modal-card-body">

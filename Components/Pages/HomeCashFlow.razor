@@ -26,7 +26,7 @@
                                     <AntiforgeryToken />
                                     <input type="hidden" name="ReturnUrl" value="@currentUrl" />
                                     <button class="button">
-                                        Logout
+                                        Wyloguj się
                                     </button>
                                 </form>
                             </div>
@@ -34,12 +34,12 @@
                         <NotAuthorized>
                             <div class="navbar-item">
                                 <NavLink class="nav-link" href="Account/Register">
-                                    <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Register
+                                    <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Zarejestuj się
                                 </NavLink>
                             </div>
                             <div class="navbar-item">
                                 <NavLink class="nav-link" href="Account/Login">
-                                    <span class="bi bi-person-badge-nav-menu" aria-hidden="true"></span> Login
+                                    <span class="bi bi-person-badge-nav-menu" aria-hidden="true"></span> Zaloguj się
                                 </NavLink>
                             </div>
                         </NotAuthorized>
@@ -84,7 +84,7 @@
             <h1 class="Title has-text-centered">Wpisy</h1>
             @if(Incomes == null)
             {
-                <p class="title">Nothings here</p>
+                <p class="title">Nic tu nie ma</p>
             }
             else
             {
@@ -112,7 +112,7 @@
                                     <td>
                                         @if (Incomes.Any(i => i.Id == transaction.Id))
                                         {
-                                            <button class="button is-success" @onclick="(() => { addincome.EditIncome(Incomes.First(i => i.Id == transaction.Id)); })">Edit</button>
+                                            <button class="button is-success" @onclick="(() => { addincome.EditIncome(Incomes.First(i => i.Id == transaction.Id)); })">Edytuj</button>
                                             <AddIncome @ref="addincome" SavedIncome="Refresh"></AddIncome>
                                         }
                                     </td>
@@ -130,7 +130,7 @@
                                     <td>
                                         @if (Outcomes.Any(i => i.Id == transaction.Id))
                                         {
-                                            <button class="button is-danger" @onclick="(() => { addoutcome.EditOutcome(Outcomes.First(i => i.Id == transaction.Id)); })">Edit</button>
+                                            <button class="button is-danger" @onclick="(() => { addoutcome.EditOutcome(Outcomes.First(i => i.Id == transaction.Id)); })">Edytuj</button>
                                             <AddOutcome @ref="addoutcome" SavedOutcome="Refresh"></AddOutcome>
                                         }
                                     </td>

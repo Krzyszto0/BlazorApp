@@ -30,7 +30,7 @@
                                     <AntiforgeryToken />
                                     <input type="hidden" name="ReturnUrl" value="@currentUrl" />
                                     <button class="button">
-                                        Logout
+                                        Wyloguj się
                                     </button>
                                 </form>
                             </div>
@@ -38,12 +38,12 @@
                         <NotAuthorized>
                             <div class="navbar-item">
                                 <NavLink class="nav-link" href="Account/Register">
-                                    <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Register
+                                    <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Zarejestruj się
                                 </NavLink>
                             </div>
                             <div class="navbar-item">
                                 <NavLink class="nav-link" href="Account/Login">
-                                    <span class="bi bi-person-badge-nav-menu" aria-hidden="true"></span> Login
+                                    <span class="bi bi-person-badge-nav-menu" aria-hidden="true"></span> Zaloguj się
                                 </NavLink>
                             </div>
                         </NotAuthorized>
@@ -98,7 +98,7 @@
                 <span class="icon">
                     <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path fill="#24d160" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM232 344V280H168c-13.3 0-24-10.7-24-24s10.7-24 24-24h64V168c0-13.3 10.7-24 24-24s24 10.7 24 24v64h64c13.3 0 24 10.7 24 24s-10.7 24-24 24H280v64c0 13.3-10.7 24-24 24s-24-10.7-24-24z" /></svg>
                 </span>
-                <span>Add Account</span>
+                <span>Dodaj Konto bankowe</span>
             </button>
             <AddAccount @ref="account" SavedAccount="Refresh"></AddAccount>
         </div>
@@ -150,7 +150,7 @@
                 <h1 class="Title has-text-centered">Wpisy</h1>
             @if(Incomes == null)
             {
-                <p class="title">Nothings here</p>
+                <p class="title">Nic tu nie ma</p>
             }
             else
             {
@@ -177,7 +177,7 @@
                                         <td>
                                             @if (Incomes.Any(i => i.Id == transaction.Id))
                                             {
-                                                <button class="button is-success" @onclick="(() => { addincome.EditIncome(Incomes.First(i => i.Id == transaction.Id)); })">Edit</button>
+                                                <button class="button is-success" @onclick="(() => { addincome.EditIncome(Incomes.First(i => i.Id == transaction.Id)); })">Edytuj</button>
                                                 <AddIncome @ref="addincome" SavedIncome="Refresh"></AddIncome>
                                             }
                                         </td>
@@ -195,7 +195,7 @@
                                         <td>
                                             @if (Outcomes.Any(i => i.Id == transaction.Id))
                                             {
-                                                <button class="button is-danger" @onclick="(() => { addoutcome.EditOutcome(Outcomes.First(i => i.Id == transaction.Id)); })">Edit</button>
+                                                <button class="button is-danger" @onclick="(() => { addoutcome.EditOutcome(Outcomes.First(i => i.Id == transaction.Id)); })">Edytuj</button>
                                                 <AddOutcome @ref="addoutcome" SavedOutcome="Refresh"></AddOutcome>
                                             }
                                         </td>
